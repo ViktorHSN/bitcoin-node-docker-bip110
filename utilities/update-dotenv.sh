@@ -51,13 +51,32 @@ if [ "$dry_run" = true ]; then
   exit 0
 fi
 
-printf "${bold}Do you wish to update .env to above versions (y or n)?${normal} "
+# Bitcoin Core
+printf "${bold}Update BITCOIN_CORE_VERSION to %s (y or n)?${normal} " "\"$bitcoin_core_version\""
 read -r answer
-
 if [ "$answer" = "y" ]; then
   sed -i '' "s/^BITCOIN_CORE_VERSION=.*/BITCOIN_CORE_VERSION=\"${bitcoin_core_version}\"/" .env
-  sed -i '' "s/^BITCOIN_KNOTS_VERSION=.*/BITCOIN_KNOTS_VERSION=\"${bitcoin_knots_version}\"/" .env
-  sed -i '' "s/^ELECTRS_VERSION=.*/ELECTRS_VERSION=\"${electrs_version}\"/" .env
-  sed -i '' "s/^TOR_VERSION=.*/TOR_VERSION=\"${tor_version}\"/" .env
-  printf "Done\n"
 fi
+
+# Bitcoin Knots
+printf "${bold}Update BITCOIN_KNOTS_VERSION to %s (y or n)?${normal} " "\"$bitcoin_knots_version\""
+read -r answer
+if [ "$answer" = "y" ]; then
+  sed -i '' "s/^BITCOIN_KNOTS_VERSION=.*/BITCOIN_KNOTS_VERSION=\"${bitcoin_knots_version}\"/" .env
+fi
+
+# Electrs
+printf "${bold}Update ELECTRS_VERSION to %s (y or n)?${normal} " "\"$electrs_version\""
+read -r answer
+if [ "$answer" = "y" ]; then
+  sed -i '' "s/^ELECTRS_VERSION=.*/ELECTRS_VERSION=\"${electrs_version}\"/" .env
+fi
+
+# Tor
+printf "${bold}Update TOR_VERSION to %s (y or n)?${normal} " "\"$tor_version\""
+read -r answer
+if [ "$answer" = "y" ]; then
+  sed -i '' "s/^TOR_VERSION=.*/TOR_VERSION=\"${tor_version}\"/" .env
+fi
+
+printf "\nDone\n"

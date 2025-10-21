@@ -84,7 +84,7 @@ $ colima --profile bitcoin-node start \
   --memory 4
 ```
 
-### Step 7: configure `.env`
+### Step 7: configure .env
 
 > Heads-up: use `BITCOIND_DB_CACHE` to set database cache memory allocation (defaults to `2048`).
 
@@ -94,36 +94,6 @@ $ colima --profile bitcoin-node start \
 
 ```console
 $ cp .env.sample .env
-```
-
-## Update
-
-### Step 1: stop Bitcoin node using <kbd>Ctrl+C</kbd> (if running)
-
-### Step 2: update `.env`
-
-> Heads-up: major version updates (going from version 29 to 30 for example) may be [contentious](https://www.youtube.com/watch?v=FZ-nD9hSaeg), so it is advisable to research changes before upgrading (use `--dry-run` to display latest versions without updating .env).
-
-```console
-$ utilities/update-dotenv.sh
-```
-
-### Step 3: run Bitcoin node
-
-> Heads-up: replace `bitcoin-core-over-tor` with desired profile and `Docker` with external volume name (if applicable).
-
-> Heads-up: running Bitcoin node will automatically trigger update.
-
-```console
-$ wakeful --grace-period 600 utilities/run.sh \
-  --profile bitcoin-core-over-tor  \
-  --volume /Volumes/Docker
-```
-
-### Step 4: remove dangling images
-
-```console
-$ docker image prune
 ```
 
 ## Caveats
@@ -220,6 +190,52 @@ $ wakeful --grace-period 600 utilities/run.sh \
 
 ```console
 $ electrum/run.sh
+```
+
+## Upgrade
+
+### Step 1: stop Bitcoin node using <kbd>Ctrl+C</kbd> (if running)
+
+### Step 2: upgrade dependencies
+
+```console
+$ brew upgrade colima docker docker-compose sunknudsen/tap/wakeful
+```
+
+### Step 3: upgrade repo
+
+> Heads-up: replace `v2.0.4` with desired [release](https://github.com/sunknudsen/bitcoin-node-docker/releases) tag.
+
+```console
+$ git pull
+
+$ git checkout v2.0.4
+```
+
+### Step 4: update .env
+
+> Heads-up: use `utilities/update-dotenv.sh` to update .env to latest versions which may be [contentious](https://www.youtube.com/watch?v=FZ-nD9hSaeg) (use `--dry-run` to display latest versions without updating .env).
+
+```console
+$ utilities/update-dotenv.sh
+```
+
+### Step 5: run Bitcoin node
+
+> Heads-up: replace `bitcoin-core-over-tor` with desired profile and `Docker` with external volume name (if applicable).
+
+> Heads-up: running Bitcoin node will automatically trigger upgrade.
+
+```console
+$ wakeful --grace-period 600 utilities/run.sh \
+  --profile bitcoin-core-over-tor  \
+  --volume /Volumes/Docker
+```
+
+### Step 6: remove dangling images
+
+```console
+$ docker image prune
 ```
 
 ## Extras
