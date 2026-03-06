@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+if [[ "${1}" == "-h" || "${1}" == "--help" ]]; then
   cat << EOF
 Usage: electrum.sh [OPTIONS]
 
@@ -21,12 +21,12 @@ EOF
 fi
 
 while [[ $# -gt 0 ]]; do
-  case $1 in
+  case "${1}" in
     -h|--help)
       shift
       ;;
     *)
-      echo "Unknown option: $1" >&2
+      echo "Unknown option: ${1}" >&2
       exit 1
       ;;
   esac
@@ -34,8 +34,11 @@ done
 
 disk=$(hdiutil attach -nomount ram://204800 | awk '{ print $1 }')
 
-diskutil partitionDisk $disk 1 GPT APFS tmp R
+diskutil partitionDisk "${disk}" 1 GPT APFS tmp R
 
-/Applications/Electrum.app/Contents/MacOS/run_electrum --oneserver --server 127.0.0.1:50001:t --wallet /Volumes/tmp/holding
+/Applications/Electrum.app/Contents/MacOS/run_electrum \
+  --oneserver \
+  --server 127.0.0.1:50001:t \
+  --wallet /Volumes/tmp/holding
 
-diskutil eject $disk
+diskutil eject "${disk}"
