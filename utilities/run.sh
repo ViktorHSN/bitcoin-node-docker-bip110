@@ -5,7 +5,7 @@ red=$(tput setaf 1)
 normal=$(tput sgr0)
 
 default_volume="/Volumes/Docker"
-default_profile="bitcoin-core-over-tor"
+default_profile="bitcoin-knots-over-tor"
 volume="$default_volume"
 profile="$default_profile"
 
@@ -103,7 +103,7 @@ colima --profile bitcoin-node start
 docker compose \
   --profile "${profile}" \
   --project-directory "${project_directory}" \
-  up
+  up --build
 
 colima --profile bitcoin-node stop
 

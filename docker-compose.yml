@@ -9,17 +9,19 @@ services:
       - ALL
     container_name: tor
     healthcheck:
-      interval: 1s
-      retries: 30
-      start_period: 30s
+      interval: 5s
+      retries: 24
+      start_period: 60s
       test: [CMD, ls, /var/lib/tor/control_auth_cookie]
     image: bitcoin-node-docker/tor:${TOR_VERSION}
     logging:
-      driver: none
+      driver: local
     read_only: true
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    tmpfs:
+      - /home/tor:size=100M,uid=1001,gid=1001
     volumes:
       - tor:/var/lib/tor
     networks:
@@ -43,7 +45,7 @@ services:
       - ALL
     container_name: bitcoin-core
     logging:
-      driver: none
+      driver: local
     read_only: true
     restart: unless-stopped
     security_opt:
@@ -182,7 +184,7 @@ services:
       - ALL
     container_name: bitcoin-knots
     logging:
-      driver: none
+      driver: local
     read_only: true
     restart: unless-stopped
     security_opt:
@@ -224,7 +226,7 @@ services:
     container_name: bitcoin-knots-over-mullvad
     extends:
       service: bitcoin-knots
-    image: bitcoin-node-docker/bitcoin-knots-over-mullvad:${BITCOIN_KNOTS_VERSION}
+    image: bitcoin-node-docker/bitcoin-knots-over-mullvad:${BITCOIN_KNOTS_IMAGE_TAG}
     profiles:
       - bitcoin-knots-over-mullvad
     # See https://github.com/bitcoinknots/bitcoin/blob/29.x-knots/share/examples/bitcoin.conf
@@ -255,7 +257,7 @@ services:
         condition: service_healthy
     extends:
       service: bitcoin-knots
-    image: bitcoin-node-docker/bitcoin-knots-over-tor:${BITCOIN_KNOTS_VERSION}
+    image: bitcoin-node-docker/bitcoin-knots-over-tor:${BITCOIN_KNOTS_IMAGE_TAG}
     profiles:
       - bitcoin-knots-over-tor
     # See https://github.com/bitcoinknots/bitcoin/blob/29.x-knots/share/examples/bitcoin.conf
@@ -288,7 +290,7 @@ services:
         condition: service_healthy
     extends:
       service: bitcoin-knots
-    image: bitcoin-node-docker/bitcoin-knots-over-tor-outbound-only:${BITCOIN_KNOTS_VERSION}
+    image: bitcoin-node-docker/bitcoin-knots-over-tor-outbound-only:${BITCOIN_KNOTS_IMAGE_TAG}
     profiles:
       - bitcoin-knots-over-tor-outbound-only
     # See https://github.com/bitcoinknots/bitcoin/blob/29.x-knots/share/examples/bitcoin.conf
@@ -322,7 +324,7 @@ services:
     container_name: electrs
     image: bitcoin-node-docker/electrs:${ELECTRS_VERSION}
     logging:
-      driver: none
+      driver: local
     read_only: true
     restart: unless-stopped
     security_opt:
